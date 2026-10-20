@@ -72,3 +72,16 @@ header{height:122px}
 .project-card{will-change:auto;backface-visibility:hidden}
 .reordering-project .project-card:not(.project-dragging){transition:transform 180ms ease-out}
 .project-card.project-dragging{will-change:transform;transition:none!important}
+
+/* iOS standalone safe-area layout correction */
+:root{--app-top-safe:env(safe-area-inset-top, 0px)}
+header{height:calc(122px + var(--app-top-safe));padding-top:calc(7px + var(--app-top-safe));flex-shrink:0}
+#workspace{height:calc(100dvh - 122px - var(--app-top-safe) - 126px - env(safe-area-inset-bottom))}
+.top{min-width:0;align-items:center;flex-wrap:nowrap}
+.top strong,#projectTitle{min-width:0;flex:1 1 auto;max-width:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:clamp(12px,3.4vw,15px)}
+.right{flex:0 0 auto;min-width:0;gap:4px;align-items:center}
+.right button{flex:0 0 auto}
+.right #addPhotos,.right #homeButton,.right #settings{min-width:32px;min-height:34px;padding:5px}
+.right #results,.right #exclude{padding:6px 5px;font-size:11px}
+@media(max-width:390px){.right{gap:3px}.right #addPhotos,.right #homeButton,.right #settings{min-width:29px;padding:4px}.right #results,.right #exclude{font-size:10px;padding:5px 4px}.right svg{width:19px;height:19px}}
+@media(max-height:650px){header{height:calc(108px + var(--app-top-safe))}#workspace{height:calc(100dvh - 108px - var(--app-top-safe) - 116px - env(safe-area-inset-bottom))}}
