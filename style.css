@@ -1,0 +1,74 @@
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#101827;color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif}button,input{font:inherit}button{border:1px solid #475569;border-radius:9px;background:#283548;color:white;padding:9px 10px;font-weight:600;cursor:pointer}button:disabled{opacity:.35}button.active{background:#285ca7;border-color:#6aafff}header{height:112px;background:#1e293b;padding:7px 11px 6px;display:flex;flex-direction:column;gap:6px}.top,.progress-head{display:flex;justify-content:space-between;align-items:center;gap:5px}.top strong{font-size:15px}.right{display:flex;gap:5px}.right button{font-size:12px;padding:7px}.right #exclude{background:#3c2933;color:#ffccd0}.progress-head{font-size:13px;font-weight:650}.progress-head #excludedCount{font-size:12px;color:#ffb4bd}.track{height:9px;background:#465367;border-radius:30px;overflow:hidden}.track div{height:100%;width:0;background:#9cd75b;transition:width .15s}#currentLabel{font-size:11px;color:#b7c4d6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#workspace{position:relative;height:calc(100dvh - 112px - 205px - env(safe-area-inset-bottom));background:#10151e;overflow:hidden;touch-action:none}#canvas{width:100%;height:100%;display:block;touch-action:none}#hint{position:absolute;left:20px;right:20px;top:45%;text-align:center;color:#b9c4d3;pointer-events:none}#busy{position:absolute;inset:0;display:grid;place-items:center;background:#11182799;font-weight:700;z-index:2}#busy[hidden]{display:none}footer{height:calc(205px + env(safe-area-inset-bottom));background:#1e293b;padding:7px 8px calc(5px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}.tools,.sliders,.primary{display:flex;gap:5px}.tools button{flex:1;font-size:11px;padding:8px 2px;white-space:nowrap}.sliders label{flex:1;font-size:12px;color:#d3dce8;display:flex;flex-direction:column;gap:1px}.sliders b{font-size:11px}.sliders input{width:100%;margin:5px 0;accent-color:#9cd75b}.primary button{padding:12px 4px;font-size:12px}.primary #previous{flex:.7}.primary #keep{flex:1.15;background:#4b596a}.primary #apply{flex:1.5;background:#267c4a;border-color:#52bb79}.help{font-size:10px;color:#aab8ca;text-align:center}dialog{background:#1e293b;color:white;border:1px solid #475569;border-radius:14px;width:min(95vw,500px);max-height:85dvh;padding:17px}dialog::backdrop{background:#000b}#resultList{max-height:43dvh;overflow:auto;margin:10px 0}#resultList .item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #3a485d;font-size:12px}#resultList .item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}#resultList button{font-size:11px;padding:5px}.dialogActions{display:flex;gap:8px}.dialogActions button{flex:1}.dialogActions #export{background:#267c4a}.note{font-size:11px;color:#b7c4d6;line-height:1.5}@media(max-height:650px){header{height:98px}footer{height:calc(180px + env(safe-area-inset-bottom));gap:4px}#workspace{height:calc(100dvh - 98px - 180px - env(safe-area-inset-bottom))}.tools button{padding:5px 2px}.primary button{padding:8px 2px}}
+
+#currentLabel{display:flex;align-items:center;gap:6px}#currentLabel>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.status{display:inline-flex;flex-shrink:0;border-radius:6px;padding:3px 7px;font-weight:800;color:#fff}.status.mosaic{background:#167d49}.status.plain{background:#245fc0}.status.excluded{background:#ba3345}.status.pending{background:#5a6575}#resultList .item .status{font-size:11px}
+
+header{height:105px}#workspace{height:calc(100dvh - 105px - 126px - env(safe-area-inset-bottom))}footer{height:calc(126px + env(safe-area-inset-bottom));gap:6px}.tools button{padding:8px 2px}.primary{display:flex;gap:6px}.primary #previous{flex:.8}.primary #next{flex:1;background:#45576f}.primary #apply{flex:1.6;background:#267c4a}.help{display:flex;justify-content:center;gap:4px;align-items:center;white-space:nowrap}.help strong{color:#d8ff8a;font-size:11px}.settingRow{padding:12px 0;border-bottom:1px solid #3a485d}.settingRow label{display:flex;flex-direction:column;gap:8px;font-size:13px}.settingRow input{width:100%;accent-color:#9cd75b}.settingRow select{background:#283548;color:#fff;border:1px solid #64748b;padding:8px;border-radius:8px}.status.pending{background:#566174}.status.mosaic{background:#147c42}.status.excluded{background:#b83248}#resetImage{background:#523945;color:#ffe1e1}#settingsDialog{max-width:440px}#closeSettings{width:100%;margin-top:12px}@media(max-height:650px){header{height:92px}footer{height:calc(116px + env(safe-area-inset-bottom))}#workspace{height:calc(100dvh - 92px - 116px - env(safe-area-inset-bottom))}}
+
+#compare{background:#34465d}#compare:active,#compare.comparing{background:#6c5e2f;border-color:#facc15}#exportCheck{margin:10px 0;line-height:1.5}#zipBatch{background:#283548;color:white;border:1px solid #64748b;padding:8px;border-radius:8px}
+
+.project-home{position:fixed;inset:0;z-index:8;overflow-y:auto;background:#101827;padding:env(safe-area-inset-top) 15px 30px}.project-home[hidden]{display:none}.project-home-inner{max-width:720px;margin:25px auto}.project-home h2{margin:10px 0}.project-home p{color:#aab8ca;font-size:13px}.new-project{background:#267c4a;border-color:#4cbd7e;width:100%;padding:14px;margin:12px 0}.project-card{background:#1e293b;border:1px solid #475569;border-radius:13px;padding:14px;margin:10px 0}.project-card-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.project-card-name{font-weight:750;overflow-wrap:anywhere}.project-card-meta{color:#aab8ca;font-size:12px;margin:7px 0}.project-card-actions{display:flex;gap:7px;justify-content:flex-end}.project-card-actions button{font-size:12px}.project-card-actions .project-delete{color:#ffb4bd;background:#432a35}.project-note{margin-top:25px}#projectTitle{max-width:36vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#homeButton{background:#334155}
+
+/* v7: compact editing controls and separate progress/location indicators */
+header{height:122px}
+#workspace{height:calc(100dvh - 122px - 126px - env(safe-area-inset-bottom))}
+.track-location{height:4px;border-radius:10px;background:#465367;overflow:hidden}
+.track-location>div{height:100%;background:#60a5fa;width:0;transition:width .15s}
+.tools{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.tools button{min-width:0;font-size:22px;line-height:1;padding:9px 0}
+#homeButton,#settings{font-size:21px;min-width:38px}
+#addPhotos{font-size:12px}
+#hint{pointer-events:none}
+#emptyPick{background:#267c4a;padding:13px 20px;pointer-events:auto}
+.project-card-head{justify-content:flex-start}
+.project-order{display:flex;flex-direction:column;gap:3px;flex:none}
+.project-order button{font-size:13px;padding:2px 10px}
+.project-card-name{flex:1}
+.project-meter{height:7px;border-radius:9px;background:#465367;overflow:hidden;margin:8px 0 12px}
+.project-meter>div{height:100%;background:#9cd75b}
+@media(max-height:650px){header{height:108px}#workspace{height:calc(100dvh - 108px - 116px - env(safe-area-inset-bottom))}}
+
+/* v8: one progress rail and consistent outline icon family */
+.track{position:relative;overflow:visible;height:10px}
+.track> #progress{border-radius:30px}
+.track> #locationProgress{position:absolute;top:-5px;bottom:-5px;width:3px;height:auto;background:#fff;border-radius:3px;box-shadow:0 0 0 1px #26364a,0 0 5px #101827;transform:translateX(-50%);z-index:1;pointer-events:none}
+.tools{display:flex;gap:4px;align-items:stretch}
+.tools button{flex:1 1 0;display:grid;place-items:center;min-width:0;font-size:12px;padding:7px 2px;line-height:1.15}
+.tools #clear,.tools #resetImage{flex:1.65 1 0;font-size:10px;white-space:normal}
+.tools svg,.right svg{display:block;width:21px;height:21px;flex:none}
+.right #addPhotos,.right #homeButton,.right #settings{display:grid;place-items:center;padding:6px;min-width:34px;min-height:34px}
+.right #addPhotos svg,.right #homeButton svg,.right #settings svg{width:21px;height:21px}
+@media(max-width:390px){.tools{gap:3px}.tools button{padding:6px 1px}.tools #clear,.tools #resetImage{font-size:9px}.tools svg{width:19px;height:19px}}
+
+/* v9: draggable progress thumb and compact reorderable project cards */
+.track{touch-action:none;cursor:pointer;min-height:12px}
+.track:before{content:"";position:absolute;inset:-12px 0;z-index:0}
+.track #progress,.track #locationProgress{pointer-events:none}
+.track:focus-visible{outline:2px solid #93c5fd;outline-offset:6px}
+.project-card{padding:9px 11px;margin:6px 0;border-color:#354257;border-radius:10px}
+.project-card-head{gap:9px}
+.project-card-name{font-size:13px;font-weight:600;line-height:1.3}
+.project-card-meta{font-size:11px;margin:3px 0;color:#9aaac0}
+.project-meter{height:5px;margin:5px 0 8px}
+.project-card-actions{gap:5px}
+.project-card-actions button{padding:6px 9px;font-size:11px;font-weight:500}
+.project-order{flex:none;display:grid;place-items:center;width:31px;height:42px;padding:3px;background:transparent;border:0;color:#a6b4c7;touch-action:none;cursor:grab}
+.project-order svg{width:21px;height:21px}
+.project-order:active{cursor:grabbing}
+.project-dragging{background:#2b3e55;border-color:#80b3f8;box-shadow:0 3px 12px #0006;position:relative;z-index:2}
+.right #settings svg,.right #addPhotos svg{width:23px;height:23px}
+
+/* v10: drag is tracked on window and cards reorder on release */
+.project-order{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.reordering-project{user-select:none;-webkit-user-select:none}
+.project-dragging{z-index:20;position:relative;pointer-events:none;box-shadow:0 7px 20px #0009}
+#markerColor{height:42px;padding:3px;background:transparent;border:0;cursor:pointer}
+
+/* Animated live project reorder feedback */
+.project-card{transition:transform 180ms cubic-bezier(.2,.8,.2,1);will-change:transform}
+.project-card.project-dragging{transition:none!important;opacity:.93;box-shadow:0 12px 25px #0008;border-color:#8db7ff}
+@media(prefers-reduced-motion:reduce){.project-card{transition:none!important}}
+
+/* Stable sibling animations: avoid compositor flicker on mobile Safari */
+.project-card{will-change:auto;backface-visibility:hidden}
+.reordering-project .project-card:not(.project-dragging){transition:transform 180ms ease-out}
+.project-card.project-dragging{will-change:transform;transition:none!important}
