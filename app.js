@@ -14,17 +14,17 @@ function update(){
  const total=entries.length,ex=entries.filter(e=>e.status==='excluded').length;
  const processed=Math.min(frontier,total),loc=total?index+1:0;
  $('counter').textContent=`進捗 ${processed} / ${total}枚`;
- $('excludedCount').textContent=`除外 ${ex}枚`;
+ $('excludedCount').textContent=`除外 ${ex}枚 ・ △候補 ${entries.filter(e=>e.candidate&&e.status!=='excluded').length}枚`;
  $('progress').style.width=(total?100*processed/total:0)+'%';
  $('locationProgress').style.left=(total?100*(Math.max(0,loc-0.5))/total:0)+'%';
  $('progressTrack').setAttribute('aria-valuemax',String(Math.max(1,total)));$('progressTrack').setAttribute('aria-valuenow',String(Math.max(1,loc)));$('progressTrack').setAttribute('aria-valuetext',total?`${loc} / ${total}枚目`:'画像なし');
  const e=entries[index];$('currentLabel').replaceChildren();
- if(e){const filename=document.createElement('span');filename.textContent=`${index+1} / ${total}枚目 ・ ${e.name} `;const badge=document.createElement('span');badge.className='status '+e.status;badge.textContent=({pending:'未処理',mosaic:'モザイク済み',plain:'加工なし',excluded:'除外'})[e.status];$('currentLabel').append(filename,badge)}
+ if(e){const filename=document.createElement('span');filename.textContent=`${index+1} / ${total}枚目 ・ ${e.name} `;const badge=document.createElement('span');badge.className='status '+e.status;badge.textContent=({pending:'未処理',mosaic:'モザイク済み',plain:'加工なし',excluded:'除外'})[e.status];$('currentLabel').append(filename,badge);if(e.candidate&&e.status!=='excluded'){const mark=document.createElement('span');mark.className='status candidate';mark.textContent='△ 候補';$('currentLabel').append(mark)}}
  else $('currentLabel').textContent='写真を追加してください';
- for(const name of ['apply','next','exclude','previous','fit','resetImage','brush','eraser','clear','undo','redo'])$(name).disabled=loading||!e||(name==='previous'&&index===0)||(name==='undo'&&!strokes.length)||(name==='redo'&&!redo.length);
+ for(const name of ['apply','next','exclude','candidate','previous','fit','resetImage','brush','eraser','clear','undo','redo'])$(name).disabled=loading||!e||(name==='previous'&&index===0)||(name==='undo'&&!strokes.length)||(name==='redo'&&!redo.length);
  $('apply').textContent=index===entries.length-1?'モザイクして完了':'モザイクして次へ →';
  $('next').textContent=index===entries.length-1?'完了・出力へ':'次へ →';
- $('resetImage').disabled=loading||!e||e.status!=='mosaic';
+ $('resetImage').disabled=loading||!e||e.status!=='mosaic';$('candidate').classList.toggle('selected',!!e?.candidate&&e.status!=='excluded');$('candidate').setAttribute('aria-pressed',String(!!e?.candidate&&e.status!=='excluded'));
 }
 function size(){let r=work.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);render()}window.addEventListener('resize',size);
 function fit(){if(!photo)return;const r=work.getBoundingClientRect();scale=Math.min(r.width/W,r.height/H)*.96;tx=(r.width-W*scale)/2;ty=(r.height-H*scale)/2;render()}
@@ -91,9 +91,19 @@ async function commit(kind){if(!photo||loading)return;if(kind==='mosaic'&&!strok
  if(kind==='mosaic'){const saved=await get(e.id+':output');if(!saved)throw new Error('加工結果が保存されていません');const preview=await loadBlob(saved);if(processedURL)URL.revokeObjectURL(processedURL);processedURL=preview.url;processedPhoto=preview.im}
  render();await advance()}catch(err){alert('保存に失敗しました: '+err.message)}finally{setBusy(false)}}
 async function resetImage(){if(!entries[index]||loading)return;if(!confirm('この画像のモザイク加工を取り消して元画像に戻しますか？'))return;setBusy(true,'元画像に戻しています…');try{const e=entries[index];await del(e.id+':output');await del(e.id+':draft');e.status='pending';await put(project.id+':manifest',entries);await show(index)}catch(err){alert(err.message)}finally{setBusy(false)}}
+async function toggleCandidate(){
+ const e=entries[index];if(!e||loading||e.status==='excluded')return;
+ e.candidate=!e.candidate;
+ try{await put(project.id+':manifest',entries);update()}catch(err){e.candidate=!e.candidate;update();alert('候補の保存に失敗しました: '+err.message)}
+}
 async function exclude(){if(!entries[index]||loading)return;setBusy(true);try{const e=entries[index];e.status='excluded';await del(e.id+':output');await del(e.id+':draft');await put(project.id+':manifest',entries);frontier=Math.max(frontier,index+1);await saveSession();await advance()}catch(err){alert(err.message)}finally{setBusy(false)}}
 function openResults(){const done=entries.filter(e=>e.status!=='excluded').length,ex=entries.filter(e=>e.status==='excluded').length,pending=entries.filter(e=>e.status==='pending').length;$('summary').textContent=`読み込み ${entries.length}枚 / 出力対象 ${done}枚 / 除外 ${ex}枚 / 未処理 ${pending}枚`; 
-$('resultList').replaceChildren();entries.forEach((e,i)=>{const div=document.createElement('div');div.className='item';const name=document.createElement('span');name.textContent=`${i+1}. ${e.name} — ${({pending:'未加工',plain:'未加工',mosaic:'モザイク済み',excluded:'除外'})[e.status]}`;const btn=document.createElement('button');btn.textContent=e.status==='excluded'?'除外を解除':'この画像へ';btn.onclick=async()=>{if(e.status==='excluded'){e.status='pending';await put(project.id+':manifest',entries);openResults();update()}else{$('resultsDialog').close();await show(i)}};div.append(name,btn);$('resultList').append(div)});$('resultsDialog').showModal()}
+$('resultList').replaceChildren();entries.forEach((e,i)=>{const div=document.createElement('div');div.className='item';const name=document.createElement('span');name.textContent=`${i+1}. ${e.name} — ${({pending:'未加工',plain:'未加工',mosaic:'モザイク済み',excluded:'除外'})[e.status]}${e.candidate&&e.status!=='excluded'?' ・ △候補':''}`;const btn=document.createElement('button');btn.textContent=e.status==='excluded'?'除外を解除':'この画像へ';btn.onclick=async()=>{if(e.status==='excluded'){e.status='pending';await put(project.id+':manifest',entries);openResults();update()}else{$('resultsDialog').close();await show(i)}};div.append(name,btn);$('resultList').append(div)});$('resultsDialog').showModal()}
+function exportImageName(e){
+ if(!e.candidate)return e.name;
+ const dot=e.name.lastIndexOf('.');
+ return (dot>0?e.name.slice(0,dot):e.name)+'_候補'+(dot>0?e.name.slice(dot):'');
+}
 // Uncompressed ZIP: blob parts avoid loading all images simultaneously into a single ArrayBuffer.
 const te=new TextEncoder(),u16=n=>new Uint8Array([n&255,(n>>>8)&255]),u32=n=>new Uint8Array([n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]);
 const table=(()=>{let t=[];for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?0xedb88320^(c>>>1):c>>>1;t[i]=c>>>0}return t})();
@@ -131,11 +141,11 @@ async function exportAll(){
   if(!confirm(`事前チェック完了\n出力 ${list.length}枚（加工 ${result.mosaicCount} / 元画像 ${result.originalCount}）\n合計 約${mb}MB\nZIP ${groups}個（${batch}枚単位）\n\n保存を開始しますか？`))return;
   const used=new Map();let finished=0;
   for(let i=0;i<list.length;i+=batch){
-   let group=list.slice(i,i+batch).map(e=>{let n=e.name,count=used.get(n)||0;used.set(n,count+1);if(count){const dot=n.lastIndexOf('.');n=(dot>=0?n.slice(0,dot):n)+`_${count+1}`+(dot>=0?n.slice(dot):'')}return {...e,name:n}});
+   let group=list.slice(i,i+batch).map(e=>{let n=exportImageName(e),count=used.get(n)||0;used.set(n,count+1);if(count){const dot=n.lastIndexOf('.');n=(dot>=0?n.slice(0,dot):n)+`_${count+1}`+(dot>=0?n.slice(dot):'')}return {...e,name:n}});
    $('busy').textContent=`ZIP ${Math.floor(i/batch)+1}/${groups} を作成中…`;
    let b=await zip(group);
    if(b.size>=0xffffffff)throw Error('ZIPが4GBに近づきました。150枚単位を試してください。');
-   download(b,`${(project?.name||'mosaic').replace(/[\\/:*?"<>|]/g,'_')}_${String(Math.floor(i/batch)+1).padStart(2,'0')}.zip`);finished++;
+   const projectName=(project?.name||'mosaic').replace(/[\\/:*?"<>|]/g,'_');const zipName=projectName+'_モザイク済み'+(groups>1?'_'+String(Math.floor(i/batch)+1).padStart(2,'0'):'')+'.zip';download(b,zipName);finished++;
    await new Promise(r=>setTimeout(r,900));
   }
   alert(`${finished}個のZIPのダウンロードを開始しました。iPhoneの「ファイル」で実際に保存されたことを確認してください。`);
@@ -157,7 +167,7 @@ $('files').onchange=async e=>{
  try{await start(files);await renderProjectList()}
  catch(err){console.error('Photo import failed',err);alert('写真の追加処理に失敗しました: '+err.message)}
 };$('brush').onclick=()=>{tool='brush';$('brush').classList.add('active');$('eraser').classList.remove('active')};$('eraser').onclick=()=>{tool='eraser';$('eraser').classList.add('active');$('brush').classList.remove('active')};
-$('brushSize').oninput=e=>{brush=+e.target.value;$('brushValue').textContent=brush+'px';previewBrush=true;localStorage.setItem('mosaic-brush',brush);render()};$('brushSize').addEventListener('change',()=>{previewBrush=false;render()});$('pixelSize').oninput=e=>{pixel=+e.target.value;$('pixelValue').textContent=pixel+'px';$('pixelIndicator').textContent='モザイク '+pixel+'px';localStorage.setItem('mosaic-pixel',pixel)};$('undo').onclick=()=>{if(strokes.length){redo.push(strokes.pop());redrawMask();saveDraft().catch(console.error)}};$('redo').onclick=()=>{if(redo.length){strokes.push(redo.pop());redrawMask();saveDraft().catch(console.error)}};$('clear').onclick=()=>{if(strokes.length){redo.push(...strokes.reverse());strokes=[];redrawMask();saveDraft().catch(console.error)}};$('fit').onclick=fit;$('previous').onclick=()=>show(index-1);$('apply').onclick=()=>commit('mosaic');$('next').onclick=async()=>{if(loading||!entries[index])return;const e=entries[index];if(e.status==='pending'){e.status='plain';await put(project.id+':manifest',entries)}await del(e.id+':draft');strokes=[];redo=[];drawing=null;frontier=Math.max(frontier,index+1);await saveSession();update();await advance()};$('resetImage').onclick=resetImage;$('exclude').onclick=exclude;$('results').onclick=openResults;$('closeResults').onclick=()=>$('resultsDialog').close();$('export').onclick=exportAll;
+$('brushSize').oninput=e=>{brush=+e.target.value;$('brushValue').textContent=brush+'px';previewBrush=true;localStorage.setItem('mosaic-brush',brush);render()};$('brushSize').addEventListener('change',()=>{previewBrush=false;render()});$('pixelSize').oninput=e=>{pixel=+e.target.value;$('pixelValue').textContent=pixel+'px';$('pixelIndicator').textContent='モザイク '+pixel+'px';localStorage.setItem('mosaic-pixel',pixel)};$('undo').onclick=()=>{if(strokes.length){redo.push(strokes.pop());redrawMask();saveDraft().catch(console.error)}};$('redo').onclick=()=>{if(redo.length){strokes.push(redo.pop());redrawMask();saveDraft().catch(console.error)}};$('clear').onclick=()=>{if(strokes.length){redo.push(...strokes.reverse());strokes=[];redrawMask();saveDraft().catch(console.error)}};$('fit').onclick=fit;$('previous').onclick=()=>show(index-1);$('apply').onclick=()=>commit('mosaic');$('next').onclick=async()=>{if(loading||!entries[index])return;const e=entries[index];if(e.status==='pending'){e.status='plain';await put(project.id+':manifest',entries)}await del(e.id+':draft');strokes=[];redo=[];drawing=null;frontier=Math.max(frontier,index+1);await saveSession();update();await advance()};$('resetImage').onclick=resetImage;$('exclude').onclick=exclude;$('candidate').onclick=toggleCandidate;$('results').onclick=openResults;$('closeResults').onclick=()=>$('resultsDialog').close();$('export').onclick=exportAll;
 
 function showProjectHome(){
   project=null;entries=[];index=0;frontier=0;photo=null;processedPhoto=null;strokes=[];redo=[];

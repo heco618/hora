@@ -85,3 +85,13 @@ header{height:calc(122px + var(--app-top-safe));padding-top:calc(7px + var(--app
 .right #results,.right #exclude{padding:6px 5px;font-size:11px}
 @media(max-width:390px){.right{gap:3px}.right #addPhotos,.right #homeButton,.right #settings{min-width:29px;padding:4px}.right #results,.right #exclude{font-size:10px;padding:5px 4px}.right svg{width:19px;height:19px}}
 @media(max-height:650px){header{height:calc(108px + var(--app-top-safe))}#workspace{height:calc(100dvh - 108px - var(--app-top-safe) - 116px - env(safe-area-inset-bottom))}}
+
+/* Candidate is a reversible label; unlike exclusion, it remains in exports. */
+.right #candidate{background:#e4b839;border-color:#f6d567;color:#29200a;font-weight:750;padding:6px 5px;font-size:11px;white-space:nowrap}
+.right #candidate.selected{background:#facc15;border-color:#fff1a0;box-shadow:inset 0 0 0 2px #694b08}
+.right #candidate:disabled{opacity:.35}
+.status.candidate{background:#e4b839;color:#2a220c}
+.right{gap:3px}
+.right #addPhotos,.right #homeButton,.right #settings{min-width:29px;padding:4px}
+.right #results,.right #exclude{padding:5px 4px}
+@media(max-width:390px){.right #candidate{font-size:10px;padding:5px 3px}.top strong,#projectTitle{font-size:12px}.right svg{width:18px;height:18px}}
