@@ -95,3 +95,12 @@ header{height:calc(122px + var(--app-top-safe));padding-top:calc(7px + var(--app
 .right #addPhotos,.right #homeButton,.right #settings{min-width:29px;padding:4px}
 .right #results,.right #exclude{padding:5px 4px}
 @media(max-width:390px){.right #candidate{font-size:10px;padding:5px 3px}.top strong,#projectTitle{font-size:12px}.right svg{width:18px;height:18px}}
+
+/* On-demand retouch tools. Keep the normal mosaic UI untouched when closed. */
+#retouchToggle{font-size:12px;font-weight:700;min-width:43px}
+#retouchToggle.active{background:#2563eb;color:white}
+#retouchPanel[hidden],#retouchBrushControls[hidden],#retouchColorControls[hidden]{display:none!important}
+#retouchPanel{position:fixed;z-index:60;bottom:calc(12px + env(safe-area-inset-bottom));left:8px;right:8px;max-width:530px;margin:auto;max-height:57dvh;overflow-y:auto;background:#152237;color:#f8fafc;border:1px solid #43536b;border-radius:16px;box-shadow:0 12px 38px #000a;padding:12px;font-size:13px}
+.retouchHead,.retouchRow,.retouchActions,.retouchTabs{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.retouchHead{justify-content:space-between}.retouchTabs>*{flex:1}.retouchRow label{width:66px;flex-shrink:0}.retouchRow input[type=range]{flex:1;min-width:0}.retouchRow output{width:42px;text-align:right}.retouchRow input[type=color]{width:45px;height:32px;padding:2px}.retouchRow span{font-size:11px}
+.retouchActions button{flex:1;white-space:nowrap}.retouchTabs .active,#retouchPicker.active,#retouchApply{background:#2563eb;color:white}.retouchNote{font-size:11px;color:#cbd5e1;margin:5px 0 12px}
