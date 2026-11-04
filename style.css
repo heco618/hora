@@ -104,3 +104,19 @@ header{height:calc(122px + var(--app-top-safe));padding-top:calc(7px + var(--app
 .retouchHead,.retouchRow,.retouchActions,.retouchTabs{display:flex;align-items:center;gap:8px;margin-bottom:9px}
 .retouchHead{justify-content:space-between}.retouchTabs>*{flex:1}.retouchRow label{width:66px;flex-shrink:0}.retouchRow input[type=range]{flex:1;min-width:0}.retouchRow output{width:42px;text-align:right}.retouchRow input[type=color]{width:45px;height:32px;padding:2px}.retouchRow span{font-size:11px}
 .retouchActions button{flex:1;white-space:nowrap}.retouchTabs .active,#retouchPicker.active,#retouchApply{background:#2563eb;color:white}.retouchNote{font-size:11px;color:#cbd5e1;margin:5px 0 12px}
+
+/* Retouch refinements */
+#retouchBrushPreview[hidden]{display:none!important}
+#retouchBrushPreview{position:fixed;z-index:80;left:50%;top:42%;transform:translate(-50%,-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;min-width:180px;min-height:180px;background:rgba(10,18,30,.18);border-radius:14px}
+#retouchBrushCircle{border:2px solid white;border-radius:50%;box-shadow:0 0 0 1px #111,0 0 0 2px #ffffff55;background:#ffffff20;flex-shrink:0}
+#retouchPicker{width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;padding:5px}
+#retouchColor{appearance:auto;-webkit-appearance:auto;border:0;background:transparent;border-radius:50%;overflow:hidden;width:42px;height:38px;cursor:pointer}
+#retouchColor::-webkit-color-swatch-wrapper{padding:2px}
+#retouchColor::-webkit-color-swatch{border-radius:50%;border:2px solid #e2e8f0}
+#settingsDialog{max-height:85dvh;overflow-y:auto;padding-top:0}
+.settingsSticky{position:sticky;top:0;z-index:2;background:#1e293b;padding:12px 0 10px;border-bottom:1px solid #475569}
+.settingsSticky h3{margin:8px 0 0}
+#closeSettings{width:auto;margin:0;display:inline-flex;align-items:center;padding:8px 14px}
+
+.hueWheel{display:inline-flex;align-items:center;justify-content:center;width:45px;height:45px;border-radius:50%;background:conic-gradient(#f00,#ff8000,#ff0,#80ff00,#0f0,#00ff80,#0ff,#0080ff,#00f,#8000ff,#f0f,#ff0080,#f00);padding:5px;flex-shrink:0}
+.hueWheel #retouchColor{width:35px;height:35px;background:#152237}
